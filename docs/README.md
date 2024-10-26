@@ -8,9 +8,7 @@
 
 ![Image of the Workflow](diagram.svg)
 
-## Demo
 
-[Project Demo Videos](https://drive.google.com/drive/folders/1VIYrazLOvcANW7OSCSGWBGZmZ-zz4NZV?usp=sharing)
 
 Note: Sometimes it will fail and demo might seem stuck at some time. It's actually because I limited the rate of API calls to prevent hitting the rate limit.
 
