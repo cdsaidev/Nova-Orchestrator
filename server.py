@@ -2,7 +2,7 @@ from fastapi import FastAPI, WebSocket, WebSocketDisconnect, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from api.conversation import conversation
-from src.inference.gemini import ChatGemini
+from src.inference.groq import ChatGroq
 from api.integration import integration
 from src.agent.meta import MetaAgent
 from api.init_database import engine
@@ -20,7 +20,7 @@ import uvicorn
 import asyncio
 
 load_dotenv()
-api_key = environ.get('GOOGLE_API_KEY')
+api_key = environ.get('GROQ_API_KEY')
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -33,8 +33,7 @@ app = FastAPI(title='Nova Orchestrator', version=1.0,
               description="The Nova coordinates the process, leveraging a ReAct Agent for tool-based tasks and a Chain of Thought Agent for reasoning-based tasks. The system's flexibility.",
               lifespan=lifespan)
 
-# Initialize the LLM model (ChatGemini)
-llm = ChatGemini(model='gemini-2.0-flash-exp', api_key=api_key, temperature=0)
+llm = ChatGroq(model='llama-3.3-70b-versatile', api_key=api_key, temperature=0)
 
 app.add_middleware(
     CORSMiddleware,
@@ -89,4 +88,5 @@ app.include_router(agent)
 app.include_router(tool)
 
 if __name__ == '__main__':
-    uvicorn.run(app, host='0.0.0.0', port=8000)
+    port = int(environ.get('PORT', 8000))
+    uvicorn.run(app, host='0.0.0.0', port=port)

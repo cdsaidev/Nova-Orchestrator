@@ -8,4 +8,5 @@ tenacity
 sqlmodel
 fastapi[standard]
 uvicorn[standard]
+psycopg2-binary
 Ipython
