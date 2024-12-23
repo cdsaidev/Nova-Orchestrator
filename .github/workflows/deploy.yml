@@ -1,0 +1,55 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # Frontend -> Vercel
+  # ---------------------------------------------------------------------------
+  deploy-frontend:
+    name: Deploy UI to Vercel
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ui
+    env:
+      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+      VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      VITE_API_URL: ${{ secrets.VITE_API_URL }}
+      VITE_WS_URL: ${{ secrets.VITE_WS_URL }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: ui/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Vercel CLI
+        run: npm install --global vercel@latest
+
+      - name: Pull Vercel project settings
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy to Vercel
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+  # ---------------------------------------------------------------------------
+  # Backend -> Render (triggered via deploy hook)
+  # ---------------------------------------------------------------------------
+  deploy-backend:
+    name: Deploy API to Render
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Render deploy
+        run: curl -fsSL -X POST "${{ secrets.RENDER_DEPLOY_HOOK_URL }}"
