@@ -22,7 +22,7 @@ export default {
   },
   async mounted() {
     this.heightAdjust();
-    this.socket = new WebSocket('ws://localhost:8000/ws');
+    this.socket = new WebSocket(import.meta.env.VITE_WS_URL || 'ws://localhost:8000/ws');
     let conversations =await this.$store.dispatch('getConversations')
     this.currentConversation=conversations.find(conversation => conversation.length==0)
     if(this.currentConversation){
