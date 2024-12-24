@@ -55,8 +55,11 @@ jobs:
         env:
           RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
         run: |
-          if [ -z "$RENDER_DEPLOY_HOOK_URL" ]; then
-            echo "RENDER_DEPLOY_HOOK_URL not set, skipping backend deploy."
-            exit 0
-          fi
-          curl -fsSL -X POST "$RENDER_DEPLOY_HOOK_URL"
+          case "$RENDER_DEPLOY_HOOK_URL" in
+            https://*)
+              curl -fsSL -X POST "$RENDER_DEPLOY_HOOK_URL"
+              ;;
+            *)
+              echo "RENDER_DEPLOY_HOOK_URL not configured with a valid https URL, skipping backend deploy."
+              ;;
+          esac
