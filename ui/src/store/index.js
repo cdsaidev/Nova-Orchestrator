@@ -268,6 +268,14 @@ const store=createStore({
             }
             console.log(data.message);
         },
+        async signupUser({commit},{first_name,last_name,email,password}){
+            let response=await axios.post(`api/user/signup`,JSON.stringify({first_name,last_name,email,password}))
+            let [data,status]=response.data
+            if(data.status=='success'){
+                router.push({name:'signin'})
+            }
+            console.log(data.message);
+        },
         async signinUser({commit},{username,password,redirect}){
             let response=await axios.post(`api/user/signin`,JSON.stringify({username,password}))
             let [data,status]=response.data
