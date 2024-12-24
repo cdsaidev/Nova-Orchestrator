@@ -1,6 +1,6 @@
 <template>
     <div class="flex flex-row bg-slate-200 p-2.5 rounded-lg gap-2 drop-shadow relative">
-        <img class="w-8 h-8" src="../../assets/Tool.svg"/>
+        <img class="w-8 h-8" src="../../assets/tool.svg"/>
         <div class="flex flex-col gap-0.5">
             <h1 class="text-xl font-medium">{{ tool.name }}</h1>
             <p class="max-h-12 text-pretty overflow-hidden">{{ tool.description }}</p>
