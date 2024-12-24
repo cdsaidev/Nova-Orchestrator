@@ -8,6 +8,10 @@ import autoprefixer from 'autoprefixer'
 
 // https://vite.dev/config/
 export default defineConfig({
+  server:{
+    host:true,
+    port:5173
+  },
   css:{
     postcss:{
       plugins:[
